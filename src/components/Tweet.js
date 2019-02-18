@@ -4,17 +4,27 @@ import { formatTweet, formatDate } from '../utils/helpers'
 import { TiArrowBackOutline } from 'react-icons/ti/'
 import { TiHeartOutline } from 'react-icons/ti/'
 import { TiHeartFullOutline } from 'react-icons/ti/'
+import { handleToggleTweet } from '../actions/tweets'
 
 class Tweet extends Component {
+  
   handleLike = (e) => {
     e.preventDefault()
 
-    // todo: Handle Like Tweet
+    const { dispatch, tweet, authedUser } = this.props
+
+    dispatch(handleToggleTweet({
+      id: tweet.id,
+      hasLiked: tweet.hasLiked,
+      authedUser
+    }))
   }
+
   toParent = (e, id) => {
     e.preventDefault()
     // todo: Redirect to parent Tweet.
   }
+
   render() {
     const { tweet } = this.props
 
@@ -50,7 +60,7 @@ class Tweet extends Component {
             <button className='heart-button' onClick={this.handleLike}>
               {hasLiked === true
                 ? <TiHeartFullOutline color='#e0245e' className='tweet-icon' />
-                : <TiHeartOutline className='tweet-icon'/>}
+                : <TiHeartOutline className='tweet-icon' />}
             </button>
             <span>{likes !== 0 && likes}</span>
           </div>
@@ -60,7 +70,7 @@ class Tweet extends Component {
   }
 }
 
-function mapStateToProps ({authedUser, users, tweets}, { id }) {
+function mapStateToProps({ authedUser, users, tweets }, { id }) {
   const tweet = tweets[id]
   const parentTweet = tweet ? tweets[tweet.replyingTo] : null
 
